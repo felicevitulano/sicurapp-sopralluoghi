@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cliente {
+  id            String        @id @default(cuid())
+  ragioneSociale String       @map("ragione_sociale")
+  partitaIva    String?       @unique @map("partita_iva")
+  codiceFiscale String?       @map("codice_fiscale")
+  indirizzo     String?
+  citta         String?
+  provincia     String?
+  cap           String?
+  referente     String?
+  telefono      String?
+  email         String?
+  note          String?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  sopralluoghi  Sopralluogo[]
+  notifiche     Notifica[]
+
+  @@map("clienti")
+}
+
+model Sopralluogo {
+  id          String            @id @default(cuid())
+  clienteId   String            @map("cliente_id")
+  tipo        TipoSopralluogo
+  stato       StatoSopralluogo  @default(BOZZA)
+  dataSopralluogo DateTime      @map("data_sopralluogo")
+  tecnico     String?
+  note        String?
+
+  // Sezione Documentazione
+  documentazione Json?
+
+  // Sezione Autorizzazioni
+  autorizzazioni Json?
+
+  // Sezione Sorveglianza Sanitaria
+  sorveglianzaSanitaria Json?   @map("sorveglianza_sanitaria")
+
+  // Sezione Formazione
+  formazione  Json?
+
+  // Sezione Requisiti Strutturali
+  requisitiStrutturali Json?    @map("requisiti_strutturali")
+
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  completedAt DateTime?         @map("completed_at")
+
+  cliente     Cliente           @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  mediaFiles  MediaFile[]
+  notifiche   Notifica[]
+
+  @@map("sopralluoghi")
+}
+
+model MediaFile {
+  id              String      @id @default(cuid())
+  sopralluogoId   String      @map("sopralluogo_id")
+  tipo            TipoMedia
+  filename        String
+  path            String
+  mimeType        String      @map("mime_type")
+  sizeBytes       Int         @map("size_bytes")
+  didascalia      String?
+  trascrizione    String?
+  sezione         String?
+  campo           String?
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  sopralluogo     Sopralluogo @relation(fields: [sopralluogoId], references: [id], onDelete: Cascade)
+
+  @@map("media_files")
+}
+
+model Notifica {
+  id              String          @id @default(cuid())
+  clienteId       String          @map("cliente_id")
+  sopralluogoId   String?         @map("sopralluogo_id")
+  tipo            TipoNotifica
+  titolo          String
+  messaggio       String
+  elemento        String?
+  dataScadenza    DateTime?       @map("data_scadenza")
+  letta           Boolean         @default(false)
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  cliente         Cliente         @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  sopralluogo     Sopralluogo?    @relation(fields: [sopralluogoId], references: [id], onDelete: SetNull)
+
+  @@map("notifiche")
+}
+
+enum TipoSopralluogo {
+  PRIMO
+  PERIODICO
+}
+
+enum StatoSopralluogo {
+  BOZZA
+  COMPLETATO
+}
+
+enum TipoMedia {
+  FOTO
+  AUDIO
+}
+
+enum TipoNotifica {
+  DOCUMENTO_IN_SCADENZA
+  CORSO_IN_SCADENZA
+  AUTORIZZAZIONE_IN_SCADENZA
+  SOPRALLUOGO_SCADUTO
+}
