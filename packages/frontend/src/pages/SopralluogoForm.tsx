@@ -85,15 +85,6 @@ export function SopralluogoForm() {
     await onSubmit({ ...data, stato: 'COMPLETATO' });
   };
 
-  const sections = [
-    { id: 'base', label: 'Dati generali' },
-    { id: 'documentazione', label: '1. Documentazione' },
-    { id: 'autorizzazioni', label: '2. Autorizzazioni' },
-    { id: 'sorveglianza', label: '3. Sorveglianza Sanitaria' },
-    { id: 'formazione', label: '4. Formazione' },
-    { id: 'requisiti', label: '5. Requisiti Strutturali' },
-    { id: 'note', label: 'Note generali' },
-  ];
 
   return (
     <div className="max-w-2xl mx-auto space-y-4 pb-24">

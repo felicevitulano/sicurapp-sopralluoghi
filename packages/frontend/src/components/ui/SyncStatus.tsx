@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Wifi, WifiOff, RefreshCw, CheckCircle } from 'lucide-react';
+import { WifiOff, RefreshCw, CheckCircle } from 'lucide-react';
 import clsx from 'clsx';
 
 type SyncState = 'online' | 'offline' | 'syncing' | 'synced';

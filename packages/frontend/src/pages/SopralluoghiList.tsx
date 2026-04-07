@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, ClipboardList, ChevronRight, Filter } from 'lucide-react';
+import { Plus, ClipboardList, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { api } from '../services/api';
-import clsx from 'clsx';
+
 
 export function SopralluoghiList() {
   const [sopralluoghi, setSopralluoghi] = useState<any[]>([]);

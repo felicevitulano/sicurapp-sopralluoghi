@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, ClipboardList, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
