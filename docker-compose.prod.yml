@@ -28,8 +28,9 @@ services:
       PORT: 3001
       MEDIA_DIR: /app/media
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      BASE_URL: http://187.124.0.120:8090
     volumes:
-      - media_data:/app/media
+      - /opt/sicurapp-media:/app/media
     depends_on:
       postgres:
         condition: service_healthy
@@ -40,7 +41,7 @@ services:
       context: ./packages/frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${API_URL}
+        VITE_API_URL: http://187.124.0.120:8090
     container_name: sicurapp_frontend
     restart: unless-stopped
 
@@ -48,12 +49,10 @@ services:
     image: nginx:alpine
     container_name: sicurapp_nginx
     ports:
-      - '80:80'
-      - '443:443'
+      - '8090:80'
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - media_data:/var/www/media:ro
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /opt/sicurapp-media:/var/www/media:ro
     depends_on:
       - frontend
       - backend
@@ -61,4 +60,3 @@ services:
 
 volumes:
   postgres_data:
-  media_data:
