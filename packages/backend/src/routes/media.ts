@@ -38,7 +38,9 @@ mediaRouter.post('/:id/media', upload.single('file'), async (req, res) => {
   }
 
   const sopralluogoId = req.params.id;
-  const { didascalia, sezione, campo } = req.body;
+  const didascalia = Array.isArray(req.body.didascalia) ? req.body.didascalia[0] : req.body.didascalia as string | undefined;
+  const sezione = Array.isArray(req.body.sezione) ? req.body.sezione[0] : req.body.sezione as string | undefined;
+  const campo = Array.isArray(req.body.campo) ? req.body.campo[0] : req.body.campo as string | undefined;
   const isAudio = req.file.mimetype.startsWith('audio/');
 
   // Move file to organized directory
